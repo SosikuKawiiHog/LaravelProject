@@ -42,7 +42,7 @@ class GameController extends Controller
         $game = Game::with('reviews')->find($id);
         if($game && $game->reviews()->count() > 0){
             $averageRating = $game->reviews()->avg('rating');
-            $game->user_score = 5.0;
+            $game->user_score = $averageRating;
         }
         return view('game',[
             'game' => $game
