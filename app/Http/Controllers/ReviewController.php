@@ -16,6 +16,7 @@ class ReviewController extends Controller
     public function create(Request $request)
     {
         $games = Game::all();
+        var_dump(compact('games'));
         return view('reviews.create', compact('games'));
     }
     public function store(Request $request){

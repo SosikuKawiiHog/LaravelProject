@@ -28,5 +28,7 @@
         </tr>
     @endforeach
 </table>
+{{--вывод пагинации--}}
+{{$games->links()}}
 </body>
 </html>
