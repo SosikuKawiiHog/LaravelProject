@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Game;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class GameController extends Controller
 {
@@ -78,6 +79,12 @@ class GameController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $game = Game::findOrFail($id);
+
+        if(!Gate::allows('delete-game', $game)){
+            return redirect('/error')->with('message','У вас нет разрешения на удаление игры ' . $game->title);
+        }
+        $game->delete($id);
+        return redirect('/game');
     }
 }

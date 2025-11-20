@@ -5,18 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\Game;
 use App\Models\Review;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class ReviewController extends Controller
 {
     public function index(){
-        //$reviews = Review::with('game')->where('user_id', auth()->id())->get();
-        $reviews = Review::with('game')->where('user_id', 1)->get();
+        $reviews = Review::with('game')->where('user_id', auth()->id())->get();
         return view('reviews.index', compact('reviews'));
     }
     public function create(Request $request)
     {
         $games = Game::all();
-        var_dump(compact('games'));
         return view('reviews.create', compact('games'));
     }
     public function store(Request $request){
@@ -32,8 +31,7 @@ class ReviewController extends Controller
             'rating.max' => 'Не может быть больше 10',
         ]);
 
-        //$existingReview = Review::where('user_id', auth()->id())->where('game_id', $validated['game_id'])->first();
-        $existingReview = Review::where('user_id',1)->where('game_id', $validated['game_id'])->first();
+        $existingReview = Review::where('user_id', auth()->id())->where('game_id', $validated['game_id'])->first();
         if($existingReview){
             return back()->withErrors([
                 'game_id' => 'Вы уже оставили отзыв'
@@ -41,8 +39,7 @@ class ReviewController extends Controller
         }
 
         Review::create([
-            //'user_id' => auth()->id(),
-            'user_id' => 1,
+            'user_id' => auth()->id(),
             'game_id' => $validated['game_id'],
             'rating' => $validated['rating'],
         ]);
@@ -50,13 +47,12 @@ class ReviewController extends Controller
     }
     public function edit(Request $request,$id){
         //$review = Review::where('user_id', auth()->id())->where('game_id', $id)->findOrFail($id);
-        $review = Review::where('user_id',1)->findOrFail($id);
+        $review = Review::where('user_id', auth()->id())->findOrFail($id);
         $games = Game::all();
         return view('reviews.edit', compact('review', 'games'));
     }
     public function update(Request $request,$id){
-        //$review = Review::where('user_id', auth()->id())->findOrFail($id);
-        $review = Review::where('user_id', 1)->findOrFail($id);
+        $review = Review::where('user_id', auth()->id())->findOrFail($id);
         $validated = $request->validate([
             'rating' => 'required|numeric|min:0|max:10',
         ],[
@@ -72,9 +68,12 @@ class ReviewController extends Controller
 
         return redirect()->route('reviews.index')->with('success', 'Отзыв успешно обновлен!');
     }
-    public function destroy(Request $request,$id){
-        //$review = Review::where('user_id', auth()->id())->where('game_id', $id)->findOrFail($id);
-        $review = Review::where('user_id',1)->findOrFail($id);
+    public function destroy($id){
+        $review = Review::findOrFail($id);
+        if(!Gate::allows('delete-review', $review)){
+            return redirect('/error')->with('message','Вы не можете удалять чужие отзывы');
+        }
+
         $review->delete();
         return redirect()->route('reviews.index')->with('success', 'Отзыв успешно удален!');
     }

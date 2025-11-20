@@ -14,7 +14,7 @@
             <th>Описание</th>
             <th>Дата выхода</th>
             <th>Разработчик</th>
-            <th>Metascore</th>SS
+            <th>Metascore</th>
             <th>Пользовательски рейтинг</th>
         </tr>
         <tr>
@@ -27,6 +27,15 @@
             <td>{{$game->user_score}}</td>
         </tr>
     </table>
+
+    <form action="{{route('game.destroy', $game->id)}}" method="POST">
+        @csrf
+        @method('DELETE')
+        <button type="submit" onclick="return confirm('Удалить игру? Это действие нельзя будет отменить')">
+            Удалить игру
+        </button>
+    </form>
+
     <h3>Отзывы</h3>
     @if($game->reviews->count() > 0)
         <table border="1">
@@ -40,6 +49,13 @@
                 <td>{{$review->user->name}}</td>
                 <td>{{$review->rating}}</td>
                 <td>{{$review->created_at->format('Y-m-d')}}</td>
+                <td>
+                    <form action="{{route('reviews.destroy',$review->id)}}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" onclick="return confirm('Удалить отзыв?')">Удалить отзыв</button>
+                    </form>
+                </td>
             </tr>
         @endforeach
         </table>
