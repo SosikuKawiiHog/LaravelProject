@@ -1,34 +1,38 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <title>609-32</title>
-</head>
-<body>
-<h2>Список игр:</h2>
-<table border="1">
-    <thread>
-        <td>id</td>
-        <td>Название</td>
-        <td>Описание</td>
-        <td>Дата выхода</td>
-        <td>Разработчик</td>
-        <td>Metascore</td>
-        <td>Пользовательский рейтинг</td>
-    </thread>
-    @foreach ($games as $game)
-        <tr>
-            <td>{{$game->id}}</td>
-            <td>{{$game->title}}</td>
-            <td>{{$game->description}}</td>
-            <td>{{$game->release_date->format('Y-m-d')}}</td>
-            <td>{{$game->developer->name}}</td>
-            <td>{{$game->meta_score}}</td>
-            <td>{{number_format($game->reviews_avg_rating,1)}}</td>
-        </tr>
-    @endforeach
-</table>
-{{--вывод пагинации--}}
-{{$games->links()}}
-</body>
-</html>
+@extends('layout')
+@section('content')
+<div class="container">
+    <h2 class="mb-4">Список игр</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Название</th>
+                    <th>Описание</th>
+                    <th>Дата выхода</th>
+                    <th>Разработчик</th>
+                    <th>Metascore</th>
+                    <th>Рейтинг пользователей</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach ($games as $game)
+                <tr>
+                    <td>{{$game->id}}</td>
+                    <td>
+                        <a href="{{url('game',$game->id)}}">{{$game->title}}</a>
+
+                    </td>
+                    <td>{{$game->description}}</td>
+                    <td>{{$game->release_date->format('Y-m-d')}}</td>
+                    <td>{{$game->developer->name}}</td>
+                    <td>{{$game->meta_score}}</td>
+                    <td>{{number_format($game->reviews_avg_rating,1)}}</td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+    </div>
+    {{$games->links('pagination::default')}}
+</div>
+@endsection

@@ -1,10 +1,5 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <title>Мои отзывы</title>
-</head>
-<body>
+@extends('layout')
+@section('content')
     <h1>Мои отзывы</h1>
     @if(session('success'))
         <div>{{session('success')}}</div>
@@ -43,4 +38,4 @@
     @else
         <p>У вас нет отзывов</p>
     @endif
-</body>
+@endsection

@@ -82,7 +82,7 @@ class GameController extends Controller
         $game = Game::findOrFail($id);
 
         if(!Gate::allows('delete-game', $game)){
-            return redirect('/error')->with('message','У вас нет разрешения на удаление игры ' . $game->title);
+            return back()->with('error','У вас нет разрешения на удаление игры ' . $game->title);
         }
         $game->delete($id);
         return redirect('/game');

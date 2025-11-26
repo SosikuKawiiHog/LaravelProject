@@ -1,10 +1,5 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <title>609-32</title>
-</head>
-<body>
+@extends('layout')
+@section('content')
 <h2>{{$game ? "Информация об игре ".$game->title : 'Неверный ID игры'}}</h2>
 @if($game)
     <table border="1">
@@ -61,5 +56,4 @@
         </table>
     @endif
 @endif
-</body>
-</html>
+@endsection

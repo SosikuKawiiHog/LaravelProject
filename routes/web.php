@@ -52,6 +52,6 @@ Route::post('/auth',[LoginController::class,'authenticate'])->name('auth.authent
 Route::delete('/game/{id}',[GameController::class,'destroy'])->name('game.destroy')->middleware('auth');
 
 
-Route::get('/error', function(){
-    return view('error',['message' => session('message')]);
-});
+//Route::get('/error', function(){
+//    return view('error',['message' => session('message')]);
+//});

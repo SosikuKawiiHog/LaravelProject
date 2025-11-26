@@ -71,7 +71,7 @@ class ReviewController extends Controller
     public function destroy($id){
         $review = Review::findOrFail($id);
         if(!Gate::allows('delete-review', $review)){
-            return redirect('/error')->with('message','Вы не можете удалять чужие отзывы');
+            return back()->with('error','Вы не можете удалять чужие отзывы');
         }
 
         $review->delete();

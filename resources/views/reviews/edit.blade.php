@@ -1,28 +1,33 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <title>Редактировать отзыв</title>
-</head>
-<body>
-    <h1>Редактировать отзыв</h1>
-    <div>
-        <strong>Игра:</strong> {{$review->game->title}} ({{$review->game->developer->name}})
-    </div>
-    <form action="{{route('reviews.update', $review->id)}}" method="POST">
-        @csrf
-        @method('PUT')
+@extends('layout')
 
-        <div>
-            <label for="rating">Рейтинг (0-10):</label>
-            <input type="number" name="rating" id="rating" min="0" max="10" step="0.1"
-                   value="{{old('rating',$review->rating)}}" placeholder="Например 7.8">
-
-            @error('rating')
-                <div>{{$message}}</div>
-            @enderror
+@section('content')
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h3 class="mb-0">Редактировать отзыв</h3>
+                    <small>Игра: {{ $review->game->title }}</small>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('reviews.update', $review->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="mb-3">
+                            <label class="form-label">Рейтинг (0–10)</label>
+                            <input type="number" step="0.1" min="0" max="10" name="rating"
+                                   value="{{ old('rating', $review->rating) }}"
+                                   class="form-control" required>
+                            @error('rating')
+                            <div class="text-danger mt-1">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ route('reviews.index') }}" class="btn btn-secondary">Отмена</a>
+                            <button type="submit" class="btn btn-primary">Сохранить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        <button type="submit">Обновить отзыв</button>
-        <a href="{{route('reviews.index')}}">Отмена</a>
-    </form>
-</body>
+    </div>
+@endsection
