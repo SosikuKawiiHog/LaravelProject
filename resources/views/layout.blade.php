@@ -18,7 +18,7 @@
 @include('error')
 
 
-<main class="flex-shrink-0" style="padding-top: 56px">
+<main style="padding-top: 56px">
     @yield('content')
 </main>
 
