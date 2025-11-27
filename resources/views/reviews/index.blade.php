@@ -3,10 +3,8 @@
     <div class="container mt-4">
         <h1>Мои отзывы</h1>
 
-        
-        <button class="btn btn-primary">
-            <a class="link-light" href="{{route('reviews.create')}}">Добавить</a>
-        </button>
+
+        <a class="btn btn-primary" href="{{route('reviews.create')}}">Добавить</a>
 
         @if($reviews->count() > 0)
             <table border="1" class="table table-bordered">
@@ -25,11 +23,11 @@
                         <td>{{$review->rating}}/10</td>
                         <td>{{$review->created_at->format('d.m.Y H:i')}}</td>
                         <td>
-                            <a href="{{route('reviews.edit',$review->id)}}">Редактировать</a>
+                            <a class="btn-outline-warning" href="{{route('reviews.edit',$review->id)}}">Редактировать</a>
                             <form action="{{route('reviews.destroy',$review->id)}}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" onclick="return confirm('Удалить?')">Удалить</button>
+                                <button class="btn btn-danger" type="submit" onclick="return confirm('Удалить?')">Удалить</button>
                             </form>
                         </td>
                     </tr>
