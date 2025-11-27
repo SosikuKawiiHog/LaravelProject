@@ -39,7 +39,9 @@ class DeveloperController extends Controller
     public function show(string $id)
     {
         return view('developer',[
-            'developer' => Developer::all()->where('id', '=', $id)->first()
+            'developer' => Developer::with(['games' => function ($query) {
+                $query->withAvg('reviews', 'rating');
+            }])->findOrFail($id)
         ]);
     }
 

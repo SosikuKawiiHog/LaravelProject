@@ -24,7 +24,7 @@ Route::get('/game', [GameController::class,'index']);
 
 Route::get('/game/{id}',[GameController::class,'show']);
 
-Route::get('genre/{id}',[GenreController::class,'show']);
+Route::get('genre/{id}',[GenreController::class,'show'])->name('genre');
 
 Route::get('/game/{id}/genres',[GameController::class,'showGenres'])->name('game.genre');
 

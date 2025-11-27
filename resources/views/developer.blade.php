@@ -1,26 +1,25 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <title>609-32</title>
-</head>
-<body>
-<h2>{{$developer ? "Список игр от разработчиков ".$developer->name : 'Неверный ID разработчика'}}</h2>
-@if($developer)
-    <table border="1">
-        <tr>
-            <th>id</th>
-            <th>Название</th>
-            <th>Metacritic</th>
-        </tr>
-        @foreach($developer->games as $game)
-            <tr>
-                <td>{{$game->id}}</td>
-                <td>{{$game->title}}</td>
-                <td>{{$game->meta_score}}</td>
-            </tr>
-        @endforeach
-    </table>
-@endif
-</body>
-</html>
+@extends('layout')
+
+@section('content')
+    <div class="container">
+        <h2>{{$developer ? "Список игр от разработчиков ".$developer->name : 'Неверный ID разработчика'}}</h2>
+        @if($developer)
+            <table border="1" class="table table-bordered">
+                <tr>
+                    <th>id</th>
+                    <th>Название</th>
+                    <th>Metacritic</th>
+                    <th>Оценка пользователей</th>
+                </tr>
+                @foreach($developer->games as $game)
+                    <tr>
+                        <td>{{$game->id}}</td>
+                        <td><a href="{{url('game',$game->id)}}">{{$game->title}}</a></td>
+                        <td>{{$game->meta_score}}</td>
+                        <td>{{ number_format($game->reviews_avg_rating, 1) }}</td>
+                    </tr>
+                @endforeach
+            </table>
+        @endif
+    </div>
+@endsection

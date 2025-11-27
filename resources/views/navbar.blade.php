@@ -20,7 +20,7 @@
                         <a class="nav-link" href="{{url('game')}}">Игры</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link disabled" aria-disabled="true">Разработчики</a>
+                        <a class="nav-link" href="{{url('developer')}}">Разработчики</a>
                     </li>
                 </ul>
             </div>
