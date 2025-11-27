@@ -23,6 +23,19 @@
                         <a class="nav-link" href="{{url('developer')}}">Разработчики</a>
                     </li>
                 </ul>
+                @if(!Auth::check())
+                    <a href="{{route('login')}}" class="link-primary">Войти</a>
+                @else
+                    <ul class="navbar-nav d-flex align-items-center">
+                        <li>
+                            <a class="nav-link active" href="#"><i class="fa fa-user" style="font-size:20px;color:white;"></i>
+                                <span> </span>{{Auth::user()->name}}</a>
+                        </li>
+                        <li>
+                            <a class="btn btn-outline-success my-2 my-sm-8" href="{{route('logout')}}">Выйти</a>
+                        </li>
+                    </ul>
+                @endif
             </div>
         </div>
     </nav>

@@ -32,7 +32,7 @@
                 </button>
             </form>
 
-            <button class="btn btn-info"><a class="link-dark" href="{{route('game.genre',$game->id)}}">Посмотреть жанры</a></button>
+           <a class="btn btn-info" href="{{route('game.genre',$game->id)}}">Посмотреть жанры</a>
 
             <h3>Отзывы</h3>
             @if($game->reviews->count() > 0)
