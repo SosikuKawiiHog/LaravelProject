@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Developer;
+use App\Models\Game;
 use Illuminate\Http\Request;
 
 class DeveloperControllerApi extends Controller
@@ -28,7 +29,11 @@ class DeveloperControllerApi extends Controller
      */
     public function show(string $id)
     {
-        return response(Developer::with('games')->findOrFail($id));
+        $devloper = Developer::with('games')->findOrFail($id);
+        foreach($devloper->games as $game){
+            $game->user_score = $game->reviews()->avg('rating');
+        }
+        return response($devloper);
     }
 
     /**
