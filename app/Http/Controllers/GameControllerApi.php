@@ -12,7 +12,7 @@ class GameControllerApi extends Controller
      */
     public function index()
     {
-        $games = Game::all();
+        $games = Game::with('developer')->get();
 
         //ДА ЧЁ НЕТ ТО
         foreach ($games as $game) {
@@ -38,7 +38,7 @@ class GameControllerApi extends Controller
      */
     public function show(string $id)
     {
-        $game = Game::with('reviews')->findOrFail($id);
+        $game = Game::with(['developer','reviews','reviews.user'])->findOrFail($id);
         $average = $game->reviews->avg('rating');
         $game->user_score = $average;
         return response($game);

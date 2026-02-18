@@ -20,7 +20,7 @@ Route::get('/developer/{id}',[DeveloperControllerApi::class, 'show']);
 //Route::get('/reviews/{id}',[ReviewControllerApi::class, 'show']);
 
 
-Route::middleware(['auth:sanctum'])->get('/logout', [AuthController::class, 'logout']);
+//Route::middleware(['auth:sanctum'])->get('/logout', [AuthController::class, 'logout']);
 
 Route::group(['middleware'=>['auth:sanctum']], function () {
     Route::get('/reviews',[ReviewControllerApi::class, 'index']);

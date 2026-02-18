@@ -12,7 +12,7 @@ class ReviewControllerApi extends Controller
      */
     public function index()
     {
-        return response(Review::all());
+        return response(Review::with('game')->get());
     }
 
     /**
@@ -28,7 +28,7 @@ class ReviewControllerApi extends Controller
      */
     public function show(string $id)
     {
-        return response(Review::find($id));
+        return response(Review::with('game')->findOrFail($id));
     }
 
     /**
