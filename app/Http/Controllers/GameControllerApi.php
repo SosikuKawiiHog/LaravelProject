@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Game;
+use App\Models\Review;
 use Illuminate\Http\Request;
 
 class GameControllerApi extends Controller
@@ -10,19 +11,21 @@ class GameControllerApi extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $games = Game::with('developer')->get();
+        $games = Game::with('developer')->limit($request->perpage ?? 5)
+            ->offset(($request->perpage ?? 5) * ($request->page ?? 0))->get();
 
-        //ДА ЧЁ НЕТ ТО
         foreach ($games as $game) {
             $game->user_score = $game->reviews()->avg('rating');
         }
 
-//        $games->each(function ($game) {
-//            $game->user_score = $game->reviews_avg_score;
-//        });
+
         return response($games);
+    }
+
+    public function total(){
+        return response(Game::all()->count());
     }
 
     /**
@@ -36,12 +39,35 @@ class GameControllerApi extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request,string $id)
     {
-        $game = Game::with(['developer','reviews','reviews.user'])->findOrFail($id);
-        $average = $game->reviews->avg('rating');
+        $game = Game::with(['developer'])->findOrFail($id);
+
+        $reviews = $game->reviews()->with('user')->limit($request->perpage ?? 5)
+            ->offset(($request->perpage ?? 5) * ($request->page ?? 0))->get();
+
+        $average = $reviews->avg('rating');
         $game->user_score = $average;
+        $game->reviews = $reviews;
         return response($game);
+    }
+
+    public function totalReviews(string $id){
+        return response(Game::with(['reviews'])->findOrFail($id)->reviews()->count());
+    }
+    public function showGenres(string $id){
+        $game = Game::with('genres')->find($id);
+
+        $total = $game->genres()->count();
+
+        return response()->json([
+            'game' => [
+                'id' => $game->id,
+                'title' => $game->title,
+                'genres' => $game->genres
+            ],
+            'total' => $total
+        ]);
     }
 
     /**

@@ -14,10 +14,13 @@ class Review extends Model
         'user_id',
         'game_id',
         'rating',
+        'text',
+        'screenshots'
     ];
 
     protected $casts = [
         'rating' => 'decimal:1',
+        'screenshots' => 'array'
     ];
 
     public function user(){
