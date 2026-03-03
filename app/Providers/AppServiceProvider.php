@@ -33,5 +33,8 @@ class AppServiceProvider extends ServiceProvider
             return $user->is_admin == 1 OR $user->id === $review->user_id;
         });
 
+        Gate::define('create-review', function ($user) {
+            return true;
+        });
     }
 }

@@ -36,4 +36,7 @@ Route::group(['middleware'=>['auth:sanctum']], function () {
     Route::get('/logout', [AuthController::class, 'logout']);
 
     Route::get('/profile/{id}', [ProfileControllerApi::class, 'show']);
+
+    Route::post('/game/{id}/reviews', [ReviewControllerApi::class, 'store']);
 });
+

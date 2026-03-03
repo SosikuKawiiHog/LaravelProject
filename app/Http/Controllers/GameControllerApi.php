@@ -16,7 +16,12 @@ class GameControllerApi extends Controller
         $games = Game::with('developer')->limit($request->perpage ?? 5)
             ->offset(($request->perpage ?? 5) * ($request->page ?? 0))->get();
 
+
         foreach ($games as $game) {
+            if($game->cover_image){
+                $game->cover_image = base64_encode($game->cover_image);
+            }
+
             $game->user_score = $game->reviews()->avg('rating');
         }
 
@@ -42,6 +47,10 @@ class GameControllerApi extends Controller
     public function show(Request $request,string $id)
     {
         $game = Game::with(['developer'])->findOrFail($id);
+
+        if($game->cover_image){
+            $game->cover_image = base64_encode($game->cover_image);
+        }
 
         $globalAvg = $game->reviews()->avg('rating');
 
