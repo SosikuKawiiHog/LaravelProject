@@ -43,12 +43,21 @@ class GameControllerApi extends Controller
     {
         $game = Game::with(['developer'])->findOrFail($id);
 
-        $reviews = $game->reviews()->with('user')->limit($request->perpage ?? 5)
-            ->offset(($request->perpage ?? 5) * ($request->page ?? 0))->get();
+        $globalAvg = $game->reviews()->avg('rating');
 
-        $average = $reviews->avg('rating');
-        $game->user_score = $average;
+        $game->user_score = $globalAvg;
+
+        $perPage = $request->input('perpage',5);
+        $page = $request->input('page',0);
+
+        $reviews = $game->reviews()
+            ->with('user')
+            ->limit($perPage)
+            ->offset($page*$perPage)
+            ->get();
+
         $game->reviews = $reviews;
+
         return response($game);
     }
 
