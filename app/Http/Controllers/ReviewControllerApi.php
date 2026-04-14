@@ -93,7 +93,52 @@ class ReviewControllerApi extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $review = Review::findOrFail($id);
+
+        if(!Gate::allows('delete-review', $review)){
+            return response()->json([
+                'code' => 1,
+                'message' => 'Нет прав на редактирование этого отзыва'
+            ], 403);
+        }
+
+        $validated = $request->validate([
+            'rating' => 'required|numeric|min:0|max:10',
+            'text' => 'nullable|string|max:2000',
+            'screenshots' => 'nullable|array|max:3',
+            'screenshots.*' => 'file|mimes:jpg,jpeg,png,gif|max:2048',
+            'keep_screenshots' => 'nullable|array',
+            'keep_screenshots.*' => 'url',
+        ]);
+
+        $screenshots = $validated['keep_screenshots'] ?? [];
+
+        if($request->hasFile('screenshots')){
+            foreach($request->file('screenshots') as $index => $file){
+                $fileName = 'review_' . auth()->id() . '_game_' . $review->game_id . time() . '_' . $index . '.' . $file->extension();
+
+                try{
+                    $path = Storage::disk('s3')->putFileAs('review_screenshots', $file, $fileName);
+                    $screenshots[] = Storage::disk('s3')->url($path);
+                } catch(\Exception $e){
+                    return response()->json([
+                        'code' => 2,
+                        'message' => 'Ошибка загрузки файла в хранилище S3',
+                    ], 500);
+                }
+            }
+        }
+
+        $review->update([
+            'rating' => $validated['rating'],
+            'text' => $validated['text'] ?? null,
+            'screenshots' => $screenshots,
+        ]);
+        return response()->json([
+            'code' => 0,
+            'message' => 'Отзыв успешно обновлён'
+        ]);
+
     }
 
     /**
@@ -101,6 +146,19 @@ class ReviewControllerApi extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $review = Review::findOrFail($id);
+
+        if(!Gate::allows('delete-review', $review)){
+            return response()->json([
+                'code' => 1,
+                'message' => 'Нет прав на удаление этого отзыва'
+            ], 403);
+        }
+
+        $review->delete();
+        return response()->json([
+            'code' => 0,
+            'message' => 'Отзыв успешно удалён'
+        ]);
     }
 }

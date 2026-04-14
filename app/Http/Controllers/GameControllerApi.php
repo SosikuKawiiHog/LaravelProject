@@ -13,24 +13,35 @@ class GameControllerApi extends Controller
      */
     public function index(Request $request)
     {
-        $games = Game::with('developer')->limit($request->perpage ?? 5)
-            ->offset(($request->perpage ?? 5) * ($request->page ?? 0))->get();
+        $search = $request->search;
 
+        $prikol = Game::with('developer');
+
+        if($search){
+            $prikol = $prikol->where('title', 'like', '%'.$search.'%');
+        }
+
+        $games = $prikol->limit($request->perpage ?? 5)
+            ->offset(($request->perpage ?? 5) * ($request->page ?? 0))->get();
 
         foreach ($games as $game) {
             if($game->cover_image){
                 $game->cover_image = base64_encode($game->cover_image);
             }
-
             $game->user_score = $game->reviews()->avg('rating');
         }
-
 
         return response($games);
     }
 
-    public function total(){
-        return response(Game::all()->count());
+    public function total(Request $request){
+        $search = $request->search;
+        $prikol = Game::query();
+
+        if($search){
+            $prikol->where('title', 'like', '%'.$search.'%');
+        }
+        return response($prikol->count());
     }
 
     /**

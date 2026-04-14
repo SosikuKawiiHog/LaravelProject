@@ -38,5 +38,10 @@ Route::group(['middleware'=>['auth:sanctum']], function () {
     Route::get('/profile/{id}', [ProfileControllerApi::class, 'show']);
 
     Route::post('/game/{id}/reviews', [ReviewControllerApi::class, 'store']);
+    Route::delete('/reviews/{id}', [ReviewControllerApi::class, 'destroy']);
+
+    //CHTOOO
+    Route::post('/reviews/{id}', [ReviewControllerApi::class, 'update']);
+    Route::put('/reviews/{id}', [ReviewControllerApi::class, 'update']);
 });
 
